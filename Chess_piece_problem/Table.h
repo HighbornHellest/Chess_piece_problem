@@ -17,26 +17,31 @@ public:
 
 	void output(std::vector<char> m_table, int col);
 
-	///cpy constructor
+	///copy constructor
 	Table(const Table &t2)
-		: m_table(t2.m_table),
+		/*: m_table(t2.m_table),
 		m_num_row(t2.m_num_row),
 		m_num_col(t2.m_num_col),
 		m_hash(t2.m_hash),
-		m_string(t2.m_string) {};
+		m_string(t2.m_string)*/
+	{
+		m_table = t2.m_table;
+		m_num_col = t2.m_num_col;
+		m_num_row = t2.m_num_row;
+		m_hash = t2.m_hash;
+		m_string = t2.m_string;
+	};
 	
-	///default constructor for size
+	///default constructor for size 	//width, lenght
 	Table(int a, int b)
 	{
-		//sor(bal oldalt)
-		m_num_row = a;
-		//oszlop(fent)
-		m_num_col = b;
+		m_num_col = a;
+		m_num_row = b;
 		for (int i = 0; i < a*b; ++i)
 		{
 			this->m_table.push_back(' ');
-			
 		}
+
 	};
 
 	~Table(){};
@@ -53,8 +58,6 @@ private:
 
 	int m_num_row;
 	int m_num_col;
-
-
 	//hash for comperator
 	int m_hash;
 	//outstring substring for comperator

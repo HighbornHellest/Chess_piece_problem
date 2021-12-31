@@ -1,5 +1,6 @@
 ﻿#include "Headers.h"
 #include "Table.h"
+#include "solver.h"
 //very importatnt every adress starts from 0!!!
 
 void solve(std::tuple<int, int> start_pos = { 0,0 }, std::tuple<int, int> size = { 8,8 })
