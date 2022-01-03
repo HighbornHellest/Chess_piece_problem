@@ -7,7 +7,8 @@ p is the position of the pawn (in 1d space)
 w is the with of the board
 +-1 is the left and the right functions.
 orientation can be determined 5 ways. the 4 normal & all.
-this function returns false, if it's a valid position for a supposed new pawn, or true if it's a good place.
+this function returns false, if it isn't a valid position for a supposed new pawn, or true if it's a good place, meaning it'll hit nothing
+
 
 example:
 (p11)( )  (p12) ( )  ( )  ( )  ( )
@@ -29,6 +30,7 @@ make edges safe
 */
 
 
+//cases are where the hypothethical pawns are facing
 bool solver::solve_pawn(int position, int orientation)
 {
 	switch (orientation)
@@ -50,7 +52,7 @@ bool solver::solve_pawn(int position, int orientation)
 	case 2: //east p-w+1 && p+w+1 //need to check p12, p14
 	{
 		char a; char b;
-		int p12= position - width + 1, p14= position - width + 1;
+		int p12= position - width + 1, p14= position + width + 1;
 		if (position+1 % width == 0 ) //top right corner
 		{
 			return TRUE; //so if position == than i'm garanteed to be at the top right corner
@@ -77,11 +79,29 @@ bool solver::solve_pawn(int position, int orientation)
 
 		break;
 	}
-	case 3: //south //
+	case 3: //south p13+w-1 & p14+w+1
 	{
 		char a; char b;
-		a = m_table->m_table.at(position + width - 1);
-		b = m_table->m_table.at(position + width + 1);
+		int p13 = position + width - 1, p14 = position + width + 1;
+
+		//bottom rows, second one is one above the bottom right
+		if (p13 > m_table->m_table.size() || p14 > m_table->m_table.size())
+		{
+			return true;
+		}
+		else if (position % width == width-1) //right side //only p3
+		{
+			a = b = p13;
+		}
+		else if (position % width == 0)//left side //only p4
+		{
+			a = b = p14;
+		}
+		else //anywhere else
+		{
+			a = p13;
+			b = p14;
+		}
 		return quick_space(a,b);
 
 		break;
