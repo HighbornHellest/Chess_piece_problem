@@ -7,7 +7,8 @@ p is the position of the pawn (in 1d space)
 w is the with of the board
 +-1 is the left and the right functions.
 orientation can be determined 5 ways. the 4 normal & all.
-this function returns false, if it isn't a valid position for a supposed new pawn, or true if it's a good place, meaning it'll hit nothing
+this function returns false, if it isn't a valid position for a supposed new pawn,
+or true if it's a valid place, meaning it'll hit nothing (or used backward if nothign hits it )
 
 
 example:
@@ -79,7 +80,7 @@ bool solver::solve_pawn(int position, int orientation)
 
 		break;
 	}
-	case 3: //south p13+w-1 & p14+w+1
+	case 3: //south p13=p+w-1 & p14=p+w+1
 	{
 		char a; char b;
 		int p13 = position + width - 1, p14 = position + width + 1;
@@ -106,34 +107,36 @@ bool solver::solve_pawn(int position, int orientation)
 
 		break;
 	}
-	case 4: //west
+	case 4: //west p11=p-w-1 && p13=p+w-1
 	{
 		char a; char b;
-		a = m_table->m_table.at(position - width - 1);
-		b = m_table->m_table.at(position + width - 1);
+		int p11 = position - width - 1, p13 = position + w - 1;
+
+		if (p11 < 0) //top row
+		{
+			if (position = 0)
+			{
+				return true;
+			}
+			else
+			{
+				a = b = p13;
+			}
+		}
+		if (position % width == 0)//left side row
+		{
+			return true;
+		}
+		if(p13 > m_table->m_table.size())//top side
+		{
+			a = b = p11;
+		}
 		return quick_space(a, b);
 		break;
 	}
 	case 5: //all
 	{
-		char a; char b;
-		//north side
-		a = m_table->m_table.at(position - width - 1);
-		b = m_table->m_table.at(position - width + 1);
-		bool s = quick_space(a, b);
-		//south side
-		a = m_table->m_table.at(position + width - 1);
-		b = m_table->m_table.at(position + width + 1);
-		bool n = quick_space(a,b);
-
-		if (a==TRUE && b == TRUE)
-		{
-			return  TRUE;
-		}
-		else
-		{
-			return FALSE;
-		}
+	
 		
 
 		break;
