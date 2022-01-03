@@ -44,3 +44,8 @@ void Table::output(std::vector<char> m_table, int col)
 	}
 	std::cout << std::endl << i << std::endl;
 }
+
+inline int Table::getm_num_row()
+{
+	return this->m_num_row;
+}

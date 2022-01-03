@@ -22,12 +22,23 @@ example:
 // the () represent non existent spaces, like those that are outside of the array, OR
 if addressed would go to next/previous line. EG p13 could be reffered to as at(5).
 
+theorically there can be only 2 kinds of solutions tho... first row, first,
+or second row first, peasants can be next to each other, every other combination is the ratation, mirror of these two
+
 */
 
 /*
-TODO:
-make corners safe
-make edges safe
+ROOK:
+LOGIC:
+Gets a position. Checks if it's the way of ANOTHER rook
+returns false if something is hitting it
+returns true  if it's a valid placement
+*/
+
+
+/*
+TODO: Rook
+
 */
 
 
@@ -110,7 +121,7 @@ bool solver::solve_pawn(int position, int orientation)
 	case 4: //west p11=p-w-1 && p13=p+w-1
 	{
 		char a; char b;
-		int p11 = position - width - 1, p13 = position + w - 1;
+		int p11 = position - width - 1, p13 = position + width - 1;
 
 		if (p11 < 0) //top row
 		{
@@ -134,13 +145,6 @@ bool solver::solve_pawn(int position, int orientation)
 		return quick_space(a, b);
 		break;
 	}
-	case 5: //all
-	{
-	
-		
-
-		break;
-	}
 	default:
 	{
 		return FALSE;
@@ -148,8 +152,35 @@ bool solver::solve_pawn(int position, int orientation)
 	}};
 	return FALSE;
 };
-void solver::solve_rook()
-{};
+
+bool solver::solve_rook(int position)
+{
+	/*
+	so, We know the dimensions of the vector. (read width)
+	we also know the position.
+	if we do a position % width (depending witch is bigger) we can get
+	the position in a 2d space. with that INFO we just need to check if something is in the way
+	and take care of the boundaries
+	*/
+	int col;
+	bool ret_value = FALSE;
+
+	if (width > position)
+		col = position;
+	else
+		col = position % width;
+	
+	while (true) //left-right
+	{}
+	while (true) //up-down
+	{
+
+	}
+	
+	int rowcount = m_table->getm_num_row();
+
+
+};
 
 void solver::solve_bishop()
 {};

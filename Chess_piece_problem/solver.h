@@ -25,7 +25,7 @@ public:
 		delete m_table;
 	};
 
-	void solve_rook();
+	bool solve_rook(int);
 	void solve_bishop();
 	bool solve_pawn(int,int);
 	void solve_queen();

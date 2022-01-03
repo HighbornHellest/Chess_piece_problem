@@ -9,11 +9,12 @@ public:
 
 	///wiretes something in 1d position
 	inline auto place(int a);
-
 	inline auto dimensons();
-
 	inline void hashMe();
 	inline void toString();
+
+	inline int getm_num_row();
+
 
 	void output(std::vector<char> m_table, int col);
 
