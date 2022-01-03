@@ -55,7 +55,6 @@ public:
 private:
 	//the table itself
 	
-
 	int m_num_row;
 	int m_num_col;
 	//hash for comperator
