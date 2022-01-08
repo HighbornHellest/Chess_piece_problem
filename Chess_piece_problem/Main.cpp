@@ -20,7 +20,7 @@ void solve(std::tuple<int, int> start_pos = { 0,0 }, std::tuple<int, int> size =
 
 	table->output(table->m_table, std::get<0>(size));
 
-	std::cout <<"retval: " << retval << std::endl;
+	std::cout <<"retval: " << retval << std::endl;//
 	
 }
 	
