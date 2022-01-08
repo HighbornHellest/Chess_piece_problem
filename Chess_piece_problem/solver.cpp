@@ -64,7 +64,7 @@ bool solver::solve_pawn(int position, int orientation)
 	case 2: //east p-w+1 && p+w+1 //need to check p12, p14
 	{
 		char a; char b;
-		int p12= position - width + 1, p14= position + width + 1;
+		unsigned int p12= position - width + 1, p14= position + width + 1;
 		if (position+1 % width == 0 ) //top right corner
 		{
 			return TRUE; //so if position == than i'm garanteed to be at the top right corner
@@ -94,7 +94,7 @@ bool solver::solve_pawn(int position, int orientation)
 	case 3: //south p13=p+w-1 & p14=p+w+1
 	{
 		char a; char b;
-		int p13 = position + width - 1, p14 = position + width + 1;
+		unsigned int p13 = position + width - 1, p14 = position + width + 1;
 
 		//bottom rows, second one is one above the bottom right
 		if (p13 > m_table->m_table.size() || p14 > m_table->m_table.size())
@@ -121,7 +121,7 @@ bool solver::solve_pawn(int position, int orientation)
 	case 4: //west p11=p-w-1 && p13=p+w-1
 	{
 		char a; char b;
-		int p11 = position - width - 1, p13 = position + width - 1;
+		unsigned int p11 = position - width - 1, p13 = position + width - 1;
 
 		if (p11 < 0) //top row
 		{
@@ -156,30 +156,56 @@ bool solver::solve_pawn(int position, int orientation)
 bool solver::solve_rook(int position)
 {
 	/*
-	so, We know the dimensions of the vector. (read width)
+	so, We know the dimensions of the vector. (read: width)
 	we also know the position.
 	if we do a position % width (depending witch is bigger) we can get
 	the position in a 2d space. with that INFO we just need to check if something is in the way
 	and take care of the boundaries
 	*/
-	int col;
-	bool ret_value = FALSE;
+	int col; //current coulmn. index starts with 0
+
+	/*
+	not gonna lie this is kinda complicated but bear with me. 
+	i'd like ot get back to column and row counters of where the piece is
+	row = p/w
+	col = p%w
+	on a 4*6 (6 tall) table, the 18th piece will give you 4 & 2 indexing with 0 (add 1 and you'll get the "normal ones"
+	adding the col one more time you'll get where the piece is, by position in 1d read
+	(row+1)*(col+1)+col+1=p 
+	you need to check bounds 
+	*/
+	int row = position / width;
 
 	if (width > position)
 		col = position;
 	else
 		col = position % width;
-	
-	while (true) //left-right
-	{}
-	while (true) //up-down
-	{
 
+	//std::cout << "row: " << row + 1 << " col: " << col + 1 << " pos: " << (row+1)*(col+1)+col+1 << std::endl;
+
+	
+	for (int i = 0; i < m_table->m_num_col;++i)//left-right
+	{
+		//row * width + i -> this works perfect
+		if (m_table->m_table[row * width + i] == ROOK)
+		{
+			return FALSE;
+		}
+	}
+
+	for (int i = 0; i < m_table->m_num_row; ++i)
+	{
+		//i*width + col -> math is solid too
+		if (m_table->m_table[i*width + col] == ROOK)
+		{
+			return FALSE;
+		}
 	}
 	
-	int rowcount = m_table->getm_num_row();
+	
 
 
+	return TRUE;
 };
 
 void solver::solve_bishop()

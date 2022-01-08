@@ -13,9 +13,6 @@ public:
 	inline void hashMe();
 	inline void toString();
 
-	inline int getm_num_row();
-
-
 	void output(std::vector<char> m_table, int col);
 
 	///copy constructor
@@ -53,11 +50,13 @@ public:
 	}
 	
 	std::vector<char> m_table;
+	int m_num_col;
+	int m_num_row;
 private:
 	//the table itself
 	
-	int m_num_row;
-	int m_num_col;
+	
+	
 	//hash for comperator
 	int m_hash;
 	//outstring substring for comperator

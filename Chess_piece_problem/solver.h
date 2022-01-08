@@ -13,7 +13,9 @@ private:
 public:
 	solver( Table *table)
 		:m_table(table)
-	{}
+	{
+		width=table->m_num_col;
+	}
 	//width, lenght
 	solver(int a, int b)
 	{
