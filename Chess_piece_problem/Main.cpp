@@ -12,12 +12,11 @@ void solve(std::tuple<int, int> start_pos = { 0,0 }, std::tuple<int, int> size =
 	//oszlop, fent || column
 	int b = std::get<1>(start_pos);
 
-	int sp = 0;
-
 	
-	table->m_table[0] = ROOK;
-	bool retval = sol->solve_rook(8);
+	table->m_table[0] = ROOK; // putting in a random rook for testing purposes
+	bool retval = sol->solve_rook(7); //solv for a theoretical rook, to test hit detection
 	
+	/*eg the 0 / 7 config should return 1 or true, as 0 is on the 1. col & 7 is in the last one & are not in the same row*/
 
 	table->output(table->m_table, std::get<0>(size));
 
@@ -29,7 +28,7 @@ void solve(std::tuple<int, int> start_pos = { 0,0 }, std::tuple<int, int> size =
 
 int main()
 {
-	solve({ 0,0 }, {4,6});
+	solve({ 0,0 }, {4,6}); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
 
 	
 	

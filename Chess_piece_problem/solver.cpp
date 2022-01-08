@@ -173,6 +173,8 @@ bool solver::solve_rook(int position)
 	adding the col one more time you'll get where the piece is, by position in 1d read
 	(row+1)*(col+1)+col+1=p 
 	you need to check bounds 
+
+	DRAR IT ON A PIECE OF PAPER AND WILL MAKE SENSE
 	*/
 	int row = position / width;
 
