@@ -174,25 +174,7 @@ bool solver::solve_rook(int position)
 	(row+1)*(col+1)+col+1=p 
 	you need to check bounds 
 
-	example:
-	  1  2  3  4
-	1[ ][ ][ ][ ]
-	2[ ][ ][ ][ ]
-	3[ ][ ][ ][ ] 
-	4[ ][ ][ ][ ]			   P
-	5[ ][ ][R][ ]  ->[16][17][18][19]
-	6[ ][ ][ ][ ]
-	
-	table: size=24 width = 4, row = 6
-	1d pos: 18
-	2d:  piece.row = pos/width 18/4=4		 | +1 so it's 5
-		 piece.col = position % width 18%4=2 | +1 so it's 3
-		 piece.offset = piece.col = 2 (well +1)
-						1d pos = (piece.row+1)*(piece.col+1)+piece.col+1 = 5*3+3 = 18
-
-
-		 this rexample doesn't take +1 offset into account in places, so it makes not much sense 
-
+	DRAR IT ON A PIECE OF PAPER AND WILL MAKE SENSE
 	*/
 	int row = position / width;
 
@@ -200,7 +182,6 @@ bool solver::solve_rook(int position)
 		col = position;
 	else
 		col = position % width;
-
 
 	//std::cout << "row: " << row + 1 << " col: " << col + 1 << " pos: " << (row+1)*(col+1)+col+1 << std::endl;
 
