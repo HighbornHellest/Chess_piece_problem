@@ -15,8 +15,8 @@ void solve(std::tuple<int, int> start_pos = { 0,0 }, std::tuple<int, int> size =
 	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	//table->m_table[0] = ROOK; // putting in a random rook for testing purposes
 
-	//table->m_table[5] = ROOK;
-	bool retval = sol->solve_bishop(0); //solv for a theoretical rook, to test hit detection
+	//table->m_table[10] = BISHOP;
+	bool retval = sol->solve_bishop(10); //solv for a theoretical rook, to test hit detection
 	//std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 
 	//std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;

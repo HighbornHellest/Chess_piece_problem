@@ -233,26 +233,52 @@ bool solver::solve_rook(int position)
 bool solver::solve_bishop(int position)
 {
 	int t_pos = position; //temp position1 to figure out where diagonal is
-	int colnum = position % width;; //variable designed to track the column in order to prevent skip
+	int colnum = position % width; //variable designed to track the column in order to prevent skip
 	int colnum2;
 
+	//down - right
 	while (!(t_pos >= m_table->m_table.size()))//down right
 	{
 		colnum = t_pos % width;
 		if (m_table->m_table[t_pos] != SPACE)
 		{
+			std::cout << "what" << std::endl;
 			return FALSE;
 		}
 		t_pos = t_pos + width + 1;
 		colnum2 = t_pos % width;
-		if (colnum2 < colnum)
+		if (colnum2 <= colnum)
 			break;
-
 	}
+
 	t_pos = position;
+	colnum = position % width;
+	colnum2 = INT32_MAX;
+	
+
+	//up right
+	while( (t_pos > 0))
+	{
+		std::cout << "REE" << std::endl;
+		colnum = t_pos % width;
+		if (m_table->m_table[t_pos] != SPACE)
+		{
+		
+			return TRUE;
+		}
+		if (colnum2 <= colnum)
+			break;
+		t_pos = t_pos - width + 1;
+		colnum2 = t_pos % width;
+	}
+
+	t_pos = position;
+	colnum = position % width;
+	colnum2 = INT32_MAX;
 
 
-	return FALSE;
+
+	return TRUE;
 };
 
 bool solver::solve_queen(int position)
