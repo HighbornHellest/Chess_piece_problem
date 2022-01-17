@@ -229,16 +229,69 @@ bool solver::solve_rook(int position)
 	return TRUE;
 };
 
-void solver::solve_bishop()
-{};
 
-void solver::solve_queen()
-{};
+bool solver::solve_bishop(int position)
+{
+	int t_pos = position; //temp position1 to figure out where diagonal is
+	int colnum = position % width;; //variable designed to track the column in order to prevent skip
+	int colnum2;
+
+	while (!(t_pos >= m_table->m_table.size()))//down right
+	{
+		colnum = t_pos % width;
+		if (m_table->m_table[t_pos] != SPACE)
+		{
+			return FALSE;
+		}
+		t_pos = t_pos + width + 1;
+		colnum2 = t_pos % width;
+		if (colnum2 < colnum)
+			break;
+
+	}
+	t_pos = position;
+
+
+	return FALSE;
+};
+
+bool solver::solve_queen(int position)
+{
+	//same stuff as rook	
+	
+	int row = position / width, col;
+	if (width > position)
+		col = position;
+	else
+		col = position % width;
+
+	for (int i = 0; i < m_table->m_num_col; ++i)//left-right
+	{
+		//row * width + i -> this works perfect
+		if (m_table->m_table[row * width + i] == QUEEN)
+		{
+			return FALSE;
+		}
+	}
+
+	for (int i = 0; i < m_table->m_num_row; ++i)
+	{
+		//i*width + col -> math is solid too
+		if (m_table->m_table[i*width + col] == QUEEN)
+		{
+			return FALSE;
+		}
+	}
+	//now the bishop part
+
+
+	return TRUE;
+};
 
 inline bool solver::quick_space(int a, int b)
 {
 
-	if (a = !SPACE && b != SPACE)
+	if (a != SPACE && b != SPACE)
 	{
 		return FALSE;
 	}

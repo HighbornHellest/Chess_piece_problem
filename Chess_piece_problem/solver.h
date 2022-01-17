@@ -28,9 +28,9 @@ public:
 	};
 
 	bool solve_rook(int);
-	void solve_bishop();
+	bool solve_bishop(int);
 	bool solve_pawn(int,int);
-	void solve_queen();
+	bool solve_queen(int);
 
 	inline bool quick_space(int,int);
 
