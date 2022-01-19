@@ -241,42 +241,83 @@ bool solver::solve_bishop(int position)
 	{
 		colnum = t_pos % width;
 		if (m_table->m_table[t_pos] != SPACE)
-		{
-			std::cout << "what" << std::endl;
 			return FALSE;
-		}
+
 		t_pos = t_pos + width + 1;
 		colnum2 = t_pos % width;
+
 		if (colnum2 <= colnum)
 			break;
 	}
-
+	
+	{
+	//reseting to staring positions
 	t_pos = position;
 	colnum = position % width;
-	colnum2 = INT32_MAX;
-	
+	colnum2 = INT32_MAX; //if it were not set to this, it could ruin the first run of the next step
+	//intmax is theoretically the safest, as a table would need to be at least this wide to mess things up.
+	// it wont be
+	}
 
 	//up right
 	while( (t_pos > 0))
 	{
-		std::cout << "REE" << std::endl;
-		colnum = t_pos % width;
+		colnum = t_pos % width; //set current col
 		if (m_table->m_table[t_pos] != SPACE)
-		{
+			return FALSE;
 		
-			return TRUE;
-		}
-		if (colnum2 <= colnum)
+		if (colnum2 <= colnum) //check previous column
 			break;
-		t_pos = t_pos - width + 1;
+
+		t_pos = t_pos - width + 1; //set "future" column
 		colnum2 = t_pos % width;
 	}
 
-	t_pos = position;
-	colnum = position % width;
-	colnum2 = INT32_MAX;
+	{
+		t_pos = position;
+		colnum = position % width;
+		colnum2 = INT32_MAX;
+	}
+	//down left
+
+	while (!(t_pos >= m_table->m_table.size()))//down right
+	{
+		colnum = t_pos % width;
+		if (m_table->m_table[t_pos] != SPACE)
+			return FALSE;
+		else
+			m_table->m_table[t_pos] = BISHOP;
+
+		t_pos = t_pos + width - 1;
+		colnum2 = t_pos % width;
+
+		if (colnum2 >= colnum)
+			break;
+	}
+
+	{
+		t_pos = position;
+		colnum = position % width;
+		colnum2 = INT32_MAX;
+	}
+
+	//up left
+	while ((t_pos >= 0))
+	{
+		//std::cout << "REE" << std::endl;
+		colnum = t_pos % width; //set current col
+		colnum2 = (t_pos-width) % width;
+		
+		if (colnum2 < colnum) //check previous column
+			break;
+		
+		if (m_table->m_table[t_pos] != SPACE)
+			return FALSE;
 
 
+		t_pos = t_pos - width  - 1; //set "future" column		
+
+	}
 
 	return TRUE;
 };
@@ -310,6 +351,124 @@ bool solver::solve_queen(int position)
 	}
 	//now the bishop part
 
+	int t_pos = position; //temp position1 to figure out where diagonal is
+	int colnum = position % width; //variable designed to track the column in order to prevent skip
+	int colnum2;
+
+	//down - right
+	while (!(t_pos >= m_table->m_table.size()))//down right
+	{
+		colnum = t_pos % width;
+		if (m_table->m_table[t_pos] != SPACE)
+			return FALSE;
+
+		t_pos = t_pos + width + 1;
+		colnum2 = t_pos % width;
+
+		if (colnum2 <= colnum)
+			break;
+	}
+
+	{
+		//reseting to staring positions
+		t_pos = position;
+		colnum = position % width;
+		colnum2 = INT32_MAX; //if it were not set to this, it could ruin the first run of the next step
+		//intmax is theoretically the safest, as a table would need to be at least this wide to mess things up.
+		// it wont be
+	}
+
+	//up right
+	while ((t_pos > 0))
+	{
+		colnum = t_pos % width; //set current col
+		if (m_table->m_table[t_pos] != SPACE)
+			return FALSE;
+
+		if (colnum2 <= colnum) //check previous column
+			break;
+
+		t_pos = t_pos - width + 1; //set "future" column
+		colnum2 = t_pos % width;
+	}
+
+	{
+		t_pos = position;
+		colnum = position % width;
+		colnum2 = INT32_MAX;
+	}
+	//down left
+
+	while (!(t_pos >= m_table->m_table.size()))//down right
+	{
+		colnum = t_pos % width;
+		if (m_table->m_table[t_pos] != SPACE)
+			return FALSE;
+		else
+			m_table->m_table[t_pos] = BISHOP;
+
+		t_pos = t_pos + width - 1;
+		colnum2 = t_pos % width;
+
+		if (colnum2 >= colnum)
+			break;
+	}
+
+	{
+		t_pos = position;
+		colnum = position % width;
+		colnum2 = INT32_MAX;
+	}
+
+	//up left
+	while ((t_pos >= 0))
+	{
+		//std::cout << "REE" << std::endl;
+		colnum = t_pos % width; //set current col
+		colnum2 = (t_pos - width) % width;
+
+		if (colnum2 < colnum) //check previous column
+			break;
+
+		if (m_table->m_table[t_pos] != SPACE)
+			return FALSE;
+
+
+		t_pos = t_pos - width - 1; //set "future" column		
+
+	}
+
+	return TRUE;
+};
+
+bool solver::solve_queen(int position)
+{
+	//same stuff as rook	
+
+	int row = position / width, col;
+	if (width > position)
+		col = position;
+	else
+		col = position % width;
+
+	for (int i = 0; i < m_table->m_num_col; ++i)//left-right
+	{
+		//row * width + i -> this works perfect
+		if (m_table->m_table[row * width + i] == QUEEN)
+		{
+			return FALSE;
+		}
+	}
+
+	for (int i = 0; i < m_table->m_num_row; ++i)
+	{
+		//i*width + col -> math is solid too
+		if (m_table->m_table[i*width + col] == QUEEN)
+		{
+			return FALSE;
+		}
+	}
+	//now the bishop part
 
 	return TRUE;
 };
