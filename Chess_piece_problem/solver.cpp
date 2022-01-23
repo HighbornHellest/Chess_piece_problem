@@ -461,7 +461,7 @@ bool solver::solve_queen(int position)
 
 	}
 	
-	std::cout << "returning TRUE" << std::endl;
+	//std::cout << "returning TRUE" << std::endl;
 	return TRUE;
 };
 

@@ -88,11 +88,17 @@ void solve(std::tuple<int, int> start_pos, std::tuple<int, int> size, PICE piece
 	Table *table = new Table(6, 5);
 	std::list<ledger> led;
 	solver *solv = new solver(size,led);
-	int a = 5;
-	bool b = solv->solve_rook(a);
+	int a;
+	std::cout << " place a piece down " << std::endl;
+	std::cin >> a;
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	bool b = solv->solve_queen(a);
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
+	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count() << "[ns]" << std::endl;
 	
 	std::cout <<"b: "<< b << std::endl;
-	solv->m_table->m_table[a] = 'r';
+	solv->m_table->m_table[a] = 'q';
 	solv->m_table->output(solv->m_table->m_table,6);
 
 	
@@ -111,9 +117,12 @@ void solve_for_bishop() {};
 
 int main()
 {
-	
+	std::cout << "give table dimensions" << std::endl;
+	int a, b;
+	std::cin >> a;
+	std::cin >> b ;
 
-	solve({ 0,0 }, {6,5}, queen ); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
+	solve({ 0,0 }, {a,b}, queen ); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
 
 
 
