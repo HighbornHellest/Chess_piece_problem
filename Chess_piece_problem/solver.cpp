@@ -36,11 +36,6 @@ returns true  if it's a valid placement
 */
 
 
-/*
-TODO: Rook
-
-*/
-
 
 //cases are where the hypothethical pawns are facing
 bool solver::solve_pawn(int position, int orientation)
@@ -198,28 +193,40 @@ bool solver::solve_rook(int position)
 
 	if (width > position)
 		col = position;
+	else if (position % width == 0)
+		col = (position / width)-1;
 	else
 		col = position % width;
 
 
 	//std::cout << "row: " << row + 1 << " col: " << col + 1 << " pos: " << (row+1)*(col+1)+col+1 << std::endl;
 
-	
-	for (int i = 0; i < m_table->m_num_col;++i)//left-right
+	/*for (int i = 0; i < m_table->m_num_col;++i)//left-right
 	{
+		std::cout << "row*width+i: " << m_table->m_num_col*col <<std::endl;
 		//row * width + i -> this works perfect
-		if (m_table->m_table[row * width + i] == ROOK)
+		if (m_table->m_table[m_table->m_num_col*col+i] != SPACE)
 		{
+			std::cout << "returning alse. next would be: " << m_table->m_table[m_table->m_num_col*col + i] << std::endl;
 			return FALSE;
 		}
-	}
+		else
+		{
+			m_table->m_table[m_table->m_num_col*col + i] = ROOK;
+		}
+		//m_table->output(m_table->m_table, 6);
+	}*/
 
 	for (int i = 0; i < m_table->m_num_row; ++i)
 	{
 		//i*width + col -> math is solid too
-		if (m_table->m_table[i*width + col] == ROOK)
+		if (m_table->m_table[i*width + col] != SPACE)
 		{
 			return FALSE;
+		}
+		else
+		{
+			m_table->m_table[i*width + col] = ROOK;
 		}
 	}
 	
@@ -336,19 +343,18 @@ bool solver::solve_queen(int position)
 	{
 		//row * width + i -> this works perfect
 		if (m_table->m_table[row * width + i] == QUEEN)
-		{
 			return FALSE;
-		}
+
 	}
 
 	for (int i = 0; i < m_table->m_num_row; ++i)
 	{
 		//i*width + col -> math is solid too
 		if (m_table->m_table[i*width + col] == QUEEN)
-		{
 			return FALSE;
-		}
 	}
+	
+	
 	//now the bishop part
 
 	int t_pos = position; //temp position1 to figure out where diagonal is
@@ -359,7 +365,7 @@ bool solver::solve_queen(int position)
 	while (!(t_pos >= m_table->m_table.size()))//down right
 	{
 		colnum = t_pos % width;
-		if (m_table->m_table[t_pos] != SPACE)
+		if (m_table->m_table[t_pos] == QUEEN)
 			return FALSE;
 
 		t_pos = t_pos + width + 1;
@@ -379,19 +385,23 @@ bool solver::solve_queen(int position)
 	}
 
 	//up right
+	
 	while ((t_pos > 0))
 	{
-		colnum = t_pos % width; //set current col
-		if (m_table->m_table[t_pos] != SPACE)
-			return FALSE;
+
+		t_pos = t_pos - width + 1; //set "future" column
+		colnum2 = t_pos % width;
 
 		if (colnum2 <= colnum) //check previous column
 			break;
 
-		t_pos = t_pos - width + 1; //set "future" column
-		colnum2 = t_pos % width;
-	}
+		colnum = t_pos % width; //set current col
+		if (m_table->m_table[t_pos] == QUEEN)
+			return FALSE;
 
+		
+	}
+	
 	{
 		t_pos = position;
 		colnum = position % width;
@@ -402,10 +412,8 @@ bool solver::solve_queen(int position)
 	while (!(t_pos >= m_table->m_table.size()))//down right
 	{
 		colnum = t_pos % width;
-		if (m_table->m_table[t_pos] != SPACE)
+		if (m_table->m_table[t_pos] == QUEEN)
 			return FALSE;
-		else
-			m_table->m_table[t_pos] = BISHOP;
 
 		t_pos = t_pos + width - 1;
 		colnum2 = t_pos % width;
@@ -413,7 +421,7 @@ bool solver::solve_queen(int position)
 		if (colnum2 >= colnum)
 			break;
 	}
-
+	
 	{
 		t_pos = position;
 		colnum = position % width;
@@ -423,55 +431,40 @@ bool solver::solve_queen(int position)
 	//up left
 	while ((t_pos >= 0))
 	{
+		//std::cout << std::endl << std::endl << std::endl << "new iteration" << std::endl;
 		//std::cout << "REE" << std::endl;
 		colnum = t_pos % width; //set current col
-		colnum2 = (t_pos - width) % width;
-
-		if (colnum2 < colnum) //check previous column
+		if( ((t_pos - width) - 1) % width <=0 )
+		{
+			colnum2 = ((t_pos - width)-1) % width;
+		}
+		else
+		{
 			break;
-
-		if (m_table->m_table[t_pos] != SPACE)
+		}
+		//std::cout << "colnum: " << colnum << " colnum 2: " << colnum2 << std::endl;
+	
+		
+		if (m_table->m_table[t_pos] == QUEEN)
+		{
+			//std::cout << "returning false t_pos: " << m_table->m_table[t_pos]  << "  tpos n: " <<t_pos<< std::endl;
 			return FALSE;
 
+		}
+		if (colnum2 > colnum) //check previous column
+		{
+			break;
+		}
+		
+		t_pos = t_pos - width - 1; //set "future" column	
 
-		t_pos = t_pos - width - 1; //set "future" column		
 
 	}
-
+	
+	std::cout << "returning TRUE" << std::endl;
 	return TRUE;
 };
 
-bool solver::solve_queen(int position)
-{
-	//same stuff as rook	
-
-	int row = position / width, col;
-	if (width > position)
-		col = position;
-	else
-		col = position % width;
-
-	for (int i = 0; i < m_table->m_num_col; ++i)//left-right
-	{
-		//row * width + i -> this works perfect
-		if (m_table->m_table[row * width + i] == QUEEN)
-		{
-			return FALSE;
-		}
-	}
-
-	for (int i = 0; i < m_table->m_num_row; ++i)
-	{
-		//i*width + col -> math is solid too
-		if (m_table->m_table[i*width + col] == QUEEN)
-		{
-			return FALSE;
-		}
-	}
-	//now the bishop part
-
-	return TRUE;
-};
 
 inline bool solver::quick_space(int a, int b)
 {

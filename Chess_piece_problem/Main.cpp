@@ -2,42 +2,120 @@
 #include "Table.h"
 #include "solver.h"
 //very importatnt every adress starts from 0!!!
+enum PICE { queen, rook, bishop };
 
-void solve(std::tuple<int, int> start_pos = { 0,0 }, std::tuple<int, int> size = { 0,0 })
+
+
+void solve_for_queen(std::list<ledger> led, std::tuple<int, int> size, int depth = 0)
 {
-	Table *table = new ::Table(std::get<0>(size), std::get<1>(size));
-	solver *sol = new solver( table);
-	//sor, bal oldalt || row
+	solver *sol = new solver(size, led);
+	int size_a = std::get<0>(size), size_b = std::get<1>(size);
+	
+	std::cout << "ledger: ";
+	for (auto le : led)
+	{
+		std::cout << le.pos <<" ";
+	}
+	std::cout<<std::endl;
+	int start_pos = depth * size_a;
+
+
+	if(depth < 8)
+	{
+		for (int i = start_pos; i < start_pos+size_a; ++i)
+		{
+			bool a = sol->solve_queen(i);
+			std::list<ledger> tled = led;
+			std::cout << a << std::endl;
+			if (a)
+			{
+				sol->m_table->m_table[i] = QUEEN;
+				tled = led;
+				tled.push_back({ i,0,0 });
+				
+				sol->m_table->output(sol->m_table->m_table,size_a);
+				std::cout << "size_A" << size_a << std::endl;
+				std::cout << "size_b" << size_b << std::endl;
+				solve_for_queen(tled, {size_a, size_b}, depth + 1);
+			}
+			sol->m_table->m_table[i] = SPACE;
+		}
+	}
+
+};
+
+void solve(std::tuple<int, int> start_pos, std::tuple<int, int> size, PICE piece = queen)
+{
+	/*// || column
 	int a = std::get<0>(start_pos);
-	//oszlop, fent || column
+	// || row
 	int b = std::get<1>(start_pos);
 
-	//std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-	//table->m_table[0] = ROOK; // putting in a random rook for testing purposes
+	int size_a = std::get<0>(size);
+	int size_b = std::get<1>(size);
+	
+	int pos = 0;
 
-	//table->m_table[23] = BISHOP;
-	bool retval = sol->solve_bishop(10); //solv for a theoretical rook, to test hit detection
-	//std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	if(b == 0)
+		pos += a;
+	else
+		pos = (b - 1)* size_a +(a-1);
 
-	//std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
-	//std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count() << "[ns]" << std::endl;
+	std::cout << pos << std::endl;
 
-	/*eg the 0 / 7 config should return 1 or true, as 0 is on the 1. col & 7 is in the last one & are not in the same row*/
+	std::list <ledger> led;
 
-	table->output(table->m_table, std::get<0>(size));
+	switch (piece)
+	{
+	case 0:
+	{
+		solve_for_queen(led, {size_a, size_b});
+		break;
+	}
+	case 1:
+	{
+		break;
+	}
+	case 2:
+	{
+		break;
+	}
 
-	std::cout <<"retval: " << retval << std::endl;
+	default:
+		break;
+	}*/
+
+	Table *table = new Table(6, 5);
+	std::list<ledger> led;
+	solver *solv = new solver(size,led);
+	int a = 5;
+	bool b = solv->solve_rook(a);
+	
+	std::cout <<"b: "<< b << std::endl;
+	solv->m_table->m_table[a] = 'r';
+	solv->m_table->output(solv->m_table->m_table,6);
+
+	
+
+
 	
 }
+
+
+
+void solve_for_rook() {};
+void solve_for_bishop() {};
+
 	
 
 
 int main()
 {
-	solve({ 0,0 }, {4,6}); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
+	
 
-	
-	
+	solve({ 0,0 }, {6,5}, queen ); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
+
+
 
 	return 0;
 }

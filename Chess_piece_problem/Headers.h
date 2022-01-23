@@ -24,3 +24,20 @@
 #define SOUTH 3
 #define WEST 4
 #define ALL 5
+
+
+struct ledger
+{
+	int pos;
+	int col;
+	int row;
+
+	ledger(int a, int b, int c)
+	{
+		pos = a;
+		col = b;
+		row = c;
+	}
+
+
+};

@@ -32,6 +32,7 @@ void Table::output(std::vector<char> m_table, int col)
 	
 	for (auto e : m_table)
 	{
+
 		if (i % (col) == 0)
 		{
 

@@ -37,7 +37,7 @@ public:
 		m_num_row = b;
 		for (int i = 0; i < a*b; ++i)
 		{
-			this->m_table.push_back(' ');
+			this->m_table.push_back(SPACE);
 		}
 
 	};
