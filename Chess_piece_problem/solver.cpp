@@ -45,8 +45,8 @@ bool solver::solve_pawn(int position, int orientation)
 	case 1: //north p-w-1 && p+w+1
 	{
 		char a; char b;
-		int p11 = position - width - 1;
-		int p12 = position - width + 1;
+		int p11 = position - height - 1;
+		int p12 = position - height + 1;
 		if (p11 >= 0 && p12 >=0) //if not outside of vector
 		{
 			a = m_table->m_table.at(p11);
@@ -59,8 +59,8 @@ bool solver::solve_pawn(int position, int orientation)
 	case 2: //east p-w+1 && p+w+1 //need to check p12, p14
 	{
 		char a; char b;
-		unsigned int p12= position - width + 1, p14= position + width + 1;
-		if (position+1 % width == 0 ) //top right corner
+		unsigned int p12= position - height + 1, p14= position + height + 1;
+		if (position+1 % height == 0 ) //top right corner
 		{
 			return TRUE; //so if position == than i'm garanteed to be at the top right corner
 			//taking east facing orientation into account, p14 is guaranteed to be "out of bounds" and should be not cindered either
@@ -89,18 +89,18 @@ bool solver::solve_pawn(int position, int orientation)
 	case 3: //south p13=p+w-1 & p14=p+w+1
 	{
 		char a; char b;
-		unsigned int p13 = position + width - 1, p14 = position + width + 1;
+		unsigned int p13 = position + height - 1, p14 = position + height + 1;
 
 		//bottom rows, second one is one above the bottom right
 		if (p13 > m_table->m_table.size() || p14 > m_table->m_table.size())
 		{
 			return true;
 		}
-		else if (position % width == width-1) //right side //only p3
+		else if (position % height == height-1) //right side //only p3
 		{
 			a = b = p13;
 		}
-		else if (position % width == 0)//left side //only p4
+		else if (position % height == 0)//left side //only p4
 		{
 			a = b = p14;
 		}
@@ -116,7 +116,7 @@ bool solver::solve_pawn(int position, int orientation)
 	case 4: //west p11=p-w-1 && p13=p+w-1
 	{
 		char a; char b;
-		unsigned int p11 = position - width - 1, p13 = position + width - 1;
+		unsigned int p11 = position - height - 1, p13 = position + height - 1;
 
 		if (p11 < 0) //top row
 		{
@@ -129,7 +129,7 @@ bool solver::solve_pawn(int position, int orientation)
 				a = b = p13;
 			}
 		}
-		if (position % width == 0)//left side row
+		if (position % height == 0)//left side row
 		{
 			return true;
 		}
@@ -189,45 +189,47 @@ bool solver::solve_rook(int position)
 		 this rexample doesn't take +1 offset into account in places, so it makes not much sense 
 
 	*/
-	int row = position / width;
-
-	if (width > position)
-		col = position;
-	else if (position % width == 0)
-		col = (position / width)-1;
+	int row;
+	if (position < height)
+		row = 0;
 	else
-		col = position % width;
+		row = (position / height)-1;
+	
+	//std::cout << "height: " << height << std::endl;
+	std::cout << "row: " << row << std::endl;
 
+	if (height > position)
+		col = position;
+	else if (position % height == 0)
+		col = (position / height)-1;
+	else
+		col = position % height;
+
+	std::cout << "m_table->m_num_col: " << m_table->m_num_col << std::endl;
 
 	//std::cout << "row: " << row + 1 << " col: " << col + 1 << " pos: " << (row+1)*(col+1)+col+1 << std::endl;
 
-	/*for (int i = 0; i < m_table->m_num_col;++i)//left-right
+	for (int i = 0; i < m_table->m_num_col;++i)//left-right
 	{
-		std::cout << "row*width+i: " << m_table->m_num_col*col <<std::endl;
+		
 		//row * width + i -> this works perfect
-		if (m_table->m_table[m_table->m_num_col*col+i] != SPACE)
+		if (m_table->m_table[m_table->m_num_col*row + i] != SPACE)
 		{
-			std::cout << "returning alse. next would be: " << m_table->m_table[m_table->m_num_col*col + i] << std::endl;
 			return FALSE;
 		}
 		else
 		{
-			m_table->m_table[m_table->m_num_col*col + i] = ROOK;
+			m_table->m_table[m_table->m_num_col*row + i] = 'M';
 		}
-		//m_table->output(m_table->m_table, 6);
-	}*/
+
+	}
 
 	for (int i = 0; i < m_table->m_num_row; ++i)
 	{
 		//i*width + col -> math is solid too
 		if (m_table->m_table[i*width + col] != SPACE)
-		{
 			return FALSE;
-		}
-		else
-		{
-			m_table->m_table[i*width + col] = ROOK;
-		}
+
 	}
 	
 	
@@ -240,18 +242,18 @@ bool solver::solve_rook(int position)
 bool solver::solve_bishop(int position)
 {
 	int t_pos = position; //temp position1 to figure out where diagonal is
-	int colnum = position % width; //variable designed to track the column in order to prevent skip
+	int colnum = position % height; //variable designed to track the column in order to prevent skip
 	int colnum2;
 
 	//down - right
 	while (!(t_pos >= m_table->m_table.size()))//down right
 	{
-		colnum = t_pos % width;
+		colnum = t_pos % height;
 		if (m_table->m_table[t_pos] != SPACE)
 			return FALSE;
 
-		t_pos = t_pos + width + 1;
-		colnum2 = t_pos % width;
+		t_pos = t_pos + height + 1;
+		colnum2 = t_pos % height;
 
 		if (colnum2 <= colnum)
 			break;
@@ -260,7 +262,7 @@ bool solver::solve_bishop(int position)
 	{
 	//reseting to staring positions
 	t_pos = position;
-	colnum = position % width;
+	colnum = position % height;
 	colnum2 = INT32_MAX; //if it were not set to this, it could ruin the first run of the next step
 	//intmax is theoretically the safest, as a table would need to be at least this wide to mess things up.
 	// it wont be
@@ -269,34 +271,34 @@ bool solver::solve_bishop(int position)
 	//up right
 	while( (t_pos > 0))
 	{
-		colnum = t_pos % width; //set current col
+		colnum = t_pos % height; //set current col
 		if (m_table->m_table[t_pos] != SPACE)
 			return FALSE;
 		
 		if (colnum2 <= colnum) //check previous column
 			break;
 
-		t_pos = t_pos - width + 1; //set "future" column
-		colnum2 = t_pos % width;
+		t_pos = t_pos - height + 1; //set "future" column
+		colnum2 = t_pos % height;
 	}
 
 	{
 		t_pos = position;
-		colnum = position % width;
+		colnum = position % height;
 		colnum2 = INT32_MAX;
 	}
 	//down left
 
 	while (!(t_pos >= m_table->m_table.size()))//down right
 	{
-		colnum = t_pos % width;
+		colnum = t_pos % height;
 		if (m_table->m_table[t_pos] != SPACE)
 			return FALSE;
 		else
 			m_table->m_table[t_pos] = BISHOP;
 
-		t_pos = t_pos + width - 1;
-		colnum2 = t_pos % width;
+		t_pos = t_pos + height - 1;
+		colnum2 = t_pos % height;
 
 		if (colnum2 >= colnum)
 			break;
@@ -304,7 +306,7 @@ bool solver::solve_bishop(int position)
 
 	{
 		t_pos = position;
-		colnum = position % width;
+		colnum = position % height;
 		colnum2 = INT32_MAX;
 	}
 
@@ -312,8 +314,8 @@ bool solver::solve_bishop(int position)
 	while ((t_pos >= 0))
 	{
 		//std::cout << "REE" << std::endl;
-		colnum = t_pos % width; //set current col
-		colnum2 = (t_pos-width) % width;
+		colnum = t_pos % height; //set current col
+		colnum2 = (t_pos-height) % height;
 		
 		if (colnum2 < colnum) //check previous column
 			break;
@@ -322,7 +324,7 @@ bool solver::solve_bishop(int position)
 			return FALSE;
 
 
-		t_pos = t_pos - width  - 1; //set "future" column		
+		t_pos = t_pos - height  - 1; //set "future" column		
 
 	}
 
@@ -333,16 +335,16 @@ bool solver::solve_queen(int position)
 {
 	//same stuff as rook	
 	
-	int row = position / width, col;
-	if (width > position)
+	int row = position / height, col;
+	if (height > position)
 		col = position;
 	else
-		col = position % width;
+		col = position % height;
 
 	for (int i = 0; i < m_table->m_num_col; ++i)//left-right
 	{
 		//row * width + i -> this works perfect
-		if (m_table->m_table[row * width + i] == QUEEN)
+		if (m_table->m_table[row * height + i] == QUEEN)
 			return FALSE;
 
 	}
@@ -350,7 +352,7 @@ bool solver::solve_queen(int position)
 	for (int i = 0; i < m_table->m_num_row; ++i)
 	{
 		//i*width + col -> math is solid too
-		if (m_table->m_table[i*width + col] == QUEEN)
+		if (m_table->m_table[i*height + col] == QUEEN)
 			return FALSE;
 	}
 	
@@ -358,18 +360,18 @@ bool solver::solve_queen(int position)
 	//now the bishop part
 
 	int t_pos = position; //temp position1 to figure out where diagonal is
-	int colnum = position % width; //variable designed to track the column in order to prevent skip
+	int colnum = position % height; //variable designed to track the column in order to prevent skip
 	int colnum2;
 
 	//down - right
 	while (!(t_pos >= m_table->m_table.size()))//down right
 	{
-		colnum = t_pos % width;
+		colnum = t_pos % height;
 		if (m_table->m_table[t_pos] == QUEEN)
 			return FALSE;
 
-		t_pos = t_pos + width + 1;
-		colnum2 = t_pos % width;
+		t_pos = t_pos + height + 1;
+		colnum2 = t_pos % height;
 
 		if (colnum2 <= colnum)
 			break;
@@ -378,7 +380,7 @@ bool solver::solve_queen(int position)
 	{
 		//reseting to staring positions
 		t_pos = position;
-		colnum = position % width;
+		colnum = position % height;
 		colnum2 = INT32_MAX; //if it were not set to this, it could ruin the first run of the next step
 		//intmax is theoretically the safest, as a table would need to be at least this wide to mess things up.
 		// it wont be
@@ -389,13 +391,13 @@ bool solver::solve_queen(int position)
 	while ((t_pos > 0))
 	{
 
-		t_pos = t_pos - width + 1; //set "future" column
-		colnum2 = t_pos % width;
+		t_pos = t_pos - height + 1; //set "future" column
+		colnum2 = t_pos % height;
 
 		if (colnum2 <= colnum) //check previous column
 			break;
 
-		colnum = t_pos % width; //set current col
+		colnum = t_pos % height; //set current col
 		if (m_table->m_table[t_pos] == QUEEN)
 			return FALSE;
 
@@ -404,19 +406,19 @@ bool solver::solve_queen(int position)
 	
 	{
 		t_pos = position;
-		colnum = position % width;
+		colnum = position % height;
 		colnum2 = INT32_MAX;
 	}
 	//down left
 
 	while (!(t_pos >= m_table->m_table.size()))//down right
 	{
-		colnum = t_pos % width;
+		colnum = t_pos % height;
 		if (m_table->m_table[t_pos] == QUEEN)
 			return FALSE;
 
-		t_pos = t_pos + width - 1;
-		colnum2 = t_pos % width;
+		t_pos = t_pos + height - 1;
+		colnum2 = t_pos % height;
 
 		if (colnum2 >= colnum)
 			break;
@@ -424,7 +426,7 @@ bool solver::solve_queen(int position)
 	
 	{
 		t_pos = position;
-		colnum = position % width;
+		colnum = position % height;
 		colnum2 = INT32_MAX;
 	}
 
@@ -433,10 +435,10 @@ bool solver::solve_queen(int position)
 	{
 		//std::cout << std::endl << std::endl << std::endl << "new iteration" << std::endl;
 		//std::cout << "REE" << std::endl;
-		colnum = t_pos % width; //set current col
-		if( ((t_pos - width) - 1) % width <=0 )
+		colnum = t_pos % height; //set current col
+		if( ((t_pos - height) - 1) % height <=0 )
 		{
-			colnum2 = ((t_pos - width)-1) % width;
+			colnum2 = ((t_pos - height)-1) % height;
 		}
 		else
 		{
@@ -456,7 +458,7 @@ bool solver::solve_queen(int position)
 			break;
 		}
 		
-		t_pos = t_pos - width - 1; //set "future" column	
+		t_pos = t_pos - height - 1; //set "future" column	
 
 
 	}

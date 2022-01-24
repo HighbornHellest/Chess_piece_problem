@@ -8,19 +8,21 @@ class solver
 
 public:
 	Table *m_table;
+	int height;
 	int width;
 
 
 	solver( Table *table)
 		:m_table(table)
 	{
-		width=table->m_num_col;
+		height=table->m_num_col;
 	}
 	//width, lenght
 	solver(int a, int b, std::list<ledger> led)
 	{
 		m_table = new Table(a, b);
-		width = b;
+		height = b;
+		width = a;
 	}	
 
 	solver(std::tuple<int, int> size, std::list<ledger> led, int piece = QUEEN)
@@ -28,7 +30,8 @@ public:
 		int a = std::get<0>(size);
 		int b = std::get<1>(size);
 		m_table = new Table(a, b);
-		width = b;
+		height = b;
+		width = a;
 
 		for (auto le : led)
 		{
