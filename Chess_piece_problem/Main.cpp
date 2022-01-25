@@ -86,17 +86,15 @@ void solve(std::tuple<int, int> start_pos, std::tuple<int, int> size, PICE piece
 	}*/
 
 	
-	std::list<ledger> led = { {12,0,0} };
+	std::list<ledger> led = { {27,0,0} };
 	solver *solv = new solver(size,led);
-	int a =6;
-
-
-	bool b = solv->solve_rook(a);
-
 	
+	int a = 20;
+	bool b = solv->solve_bishop(a);
+
 	std::cout <<"b: "<< b << std::endl;
-	solv->m_table->m_table[a] = 'q';
-	solv->m_table->output(solv->m_table->m_table,6);
+	solv->m_table->m_table[a] = 'b';
+	solv->m_table->output(solv->m_table->m_table, solv->m_table->m_num_col);
 
 	
 
@@ -116,7 +114,7 @@ int main()
 {
 
 
-	solve({ 0,0 }, {6,9}, queen ); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
+	solve({ 0,0 }, {6,5}, queen ); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
 
 
 

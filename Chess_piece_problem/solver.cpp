@@ -234,18 +234,18 @@ bool solver::solve_rook(int position)
 bool solver::solve_bishop(int position)
 {
 	int t_pos = position; //temp position1 to figure out where diagonal is
-	int colnum = position % height; //variable designed to track the column in order to prevent skip
+	int colnum = position % width; //variable designed to track the column in order to prevent skip
 	int colnum2;
 
 	//down - right
 	while (!(t_pos >= m_table->m_table.size()))//down right
 	{
-		colnum = t_pos % height;
+		colnum = t_pos % width;
 		if (m_table->m_table[t_pos] != SPACE)
 			return FALSE;
 
-		t_pos = t_pos + height + 1;
-		colnum2 = t_pos % height;
+		t_pos = t_pos + width + 1;
+		colnum2 = t_pos % width;
 
 		if (colnum2 <= colnum)
 			break;
@@ -254,72 +254,79 @@ bool solver::solve_bishop(int position)
 	{
 	//reseting to staring positions
 	t_pos = position;
-	colnum = position % height;
+	colnum = position % width;
 	colnum2 = INT32_MAX; //if it were not set to this, it could ruin the first run of the next step
 	//intmax is theoretically the safest, as a table would need to be at least this wide to mess things up.
 	// it wont be
 	}
 
+	
 	//up right
 	while( (t_pos > 0))
 	{
-		colnum = t_pos % height; //set current col
-		if (m_table->m_table[t_pos] != SPACE)
-			return FALSE;
-		
 		if (colnum2 <= colnum) //check previous column
 			break;
 
-		t_pos = t_pos - height + 1; //set "future" column
-		colnum2 = t_pos % height;
-	}
+		colnum = t_pos % width; //set current col
+		if (m_table->m_table[t_pos] != SPACE)
+			return FALSE;
 
+		t_pos = t_pos - width + 1; //set "future" column
+		colnum2 = t_pos % width;
+	}
+	
 	{
 		t_pos = position;
-		colnum = position % height;
+		colnum = position % width;
 		colnum2 = INT32_MAX;
 	}
+	
 	//down left
 
 	while (!(t_pos >= m_table->m_table.size()))//down right
 	{
-		colnum = t_pos % height;
+		colnum = t_pos % width;
 		if (m_table->m_table[t_pos] != SPACE)
 			return FALSE;
-		else
-			m_table->m_table[t_pos] = BISHOP;
 
-		t_pos = t_pos + height - 1;
-		colnum2 = t_pos % height;
+		t_pos = t_pos + width - 1;
+		colnum2 = t_pos % width;
 
 		if (colnum2 >= colnum)
 			break;
 	}
+	
 
 	{
 		t_pos = position;
-		colnum = position % height;
+		colnum = position % width;
 		colnum2 = INT32_MAX;
 	}
 
 	//up left
-	while ((t_pos >= 0))
+	while (t_pos > 0)
 	{
 		//std::cout << "REE" << std::endl;
-		colnum = t_pos % height; //set current col
-		colnum2 = (t_pos-height) % height;
-		
-		if (colnum2 < colnum) //check previous column
-			break;
-		
+		colnum = t_pos % width; //set current col
+
 		if (m_table->m_table[t_pos] != SPACE)
 			return FALSE;
 
 
-		t_pos = t_pos - height  - 1; //set "future" column		
+		t_pos = t_pos - width - 1; //set "future" column		
+		
+		if (width > t_pos)
+			colnum2 = t_pos;
+		else
+			colnum2 = (t_pos - width) % width;
+
+		if (colnum2 > colnum) //check previous column
+		{
+			break;
+		}
 
 	}
-
+	
 	return TRUE;
 };
 
