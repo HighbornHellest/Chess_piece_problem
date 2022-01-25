@@ -86,11 +86,11 @@ void solve(std::tuple<int, int> start_pos, std::tuple<int, int> size, PICE piece
 	}*/
 
 	
-	std::list<ledger> led = { {27,0,0} };
+	std::list<ledger> led = { {10,0,0} };
 	solver *solv = new solver(size,led);
 	
 	int a = 20;
-	bool b = solv->solve_bishop(a);
+	bool b = solv->solve_queen(a);
 
 	std::cout <<"b: "<< b << std::endl;
 	solv->m_table->m_table[a] = 'b';

@@ -194,9 +194,7 @@ bool solver::solve_rook(int position)
 		row = 0;
 	else
 		row = (position / height)-1;
-	
-	std::cout << "height: " << height << std::endl;
-	std::cout << "width: " << width << std::endl;
+
 
 	if (width > position)
 		col = position;
@@ -204,7 +202,6 @@ bool solver::solve_rook(int position)
 		col = (position % width);
 	else
 		col = position % width;
-	std::cout << "col: "  << col << std::endl;
 
 	for (int i = 0; i < m_table->m_num_col; ++i)//left-right
 	{
@@ -214,9 +211,6 @@ bool solver::solve_rook(int position)
 			return FALSE;
 	}
 
-
-	
-
 	for (int i = 0; i < m_table->m_num_row; ++i)
 	{
 		//i*width + col -> math is solid too
@@ -224,12 +218,8 @@ bool solver::solve_rook(int position)
 			return FALSE;
 	}
 	
-	
-
-
 	return TRUE;
 };
-
 
 bool solver::solve_bishop(int position)
 {
@@ -306,11 +296,11 @@ bool solver::solve_bishop(int position)
 	//up left
 	while (t_pos > 0)
 	{
-		//std::cout << "REE" << std::endl;
 		colnum = t_pos % width; //set current col
 
 		if (m_table->m_table[t_pos] != SPACE)
 			return FALSE;
+
 
 
 		t_pos = t_pos - width - 1; //set "future" column		
@@ -332,138 +322,7 @@ bool solver::solve_bishop(int position)
 
 bool solver::solve_queen(int position)
 {
-	//same stuff as rook	
-	
-	int row = position / height, col;
-	if (height > position)
-		col = position;
-	else
-		col = position % height;
-
-	for (int i = 0; i < m_table->m_num_col; ++i)//left-right
-	{
-		//row * width + i -> this works perfect
-		if (m_table->m_table[row * height + i] == QUEEN)
-			return FALSE;
-
-	}
-
-	for (int i = 0; i < m_table->m_num_row; ++i)
-	{
-		//i*width + col -> math is solid too
-		if (m_table->m_table[i*height + col] == QUEEN)
-			return FALSE;
-	}
-	
-	
-	//now the bishop part
-
-	int t_pos = position; //temp position1 to figure out where diagonal is
-	int colnum = position % height; //variable designed to track the column in order to prevent skip
-	int colnum2;
-
-	//down - right
-	while (!(t_pos >= m_table->m_table.size()))//down right
-	{
-		colnum = t_pos % height;
-		if (m_table->m_table[t_pos] == QUEEN)
-			return FALSE;
-
-		t_pos = t_pos + height + 1;
-		colnum2 = t_pos % height;
-
-		if (colnum2 <= colnum)
-			break;
-	}
-
-	{
-		//reseting to staring positions
-		t_pos = position;
-		colnum = position % height;
-		colnum2 = INT32_MAX; //if it were not set to this, it could ruin the first run of the next step
-		//intmax is theoretically the safest, as a table would need to be at least this wide to mess things up.
-		// it wont be
-	}
-
-	//up right
-	
-	while ((t_pos > 0))
-	{
-
-		t_pos = t_pos - height + 1; //set "future" column
-		colnum2 = t_pos % height;
-
-		if (colnum2 <= colnum) //check previous column
-			break;
-
-		colnum = t_pos % height; //set current col
-		if (m_table->m_table[t_pos] == QUEEN)
-			return FALSE;
-
-		
-	}
-	
-	{
-		t_pos = position;
-		colnum = position % height;
-		colnum2 = INT32_MAX;
-	}
-	//down left
-
-	while (!(t_pos >= m_table->m_table.size()))//down right
-	{
-		colnum = t_pos % height;
-		if (m_table->m_table[t_pos] == QUEEN)
-			return FALSE;
-
-		t_pos = t_pos + height - 1;
-		colnum2 = t_pos % height;
-
-		if (colnum2 >= colnum)
-			break;
-	}
-	
-	{
-		t_pos = position;
-		colnum = position % height;
-		colnum2 = INT32_MAX;
-	}
-
-	//up left
-	while ((t_pos >= 0))
-	{
-		//std::cout << std::endl << std::endl << std::endl << "new iteration" << std::endl;
-		//std::cout << "REE" << std::endl;
-		colnum = t_pos % height; //set current col
-		if( ((t_pos - height) - 1) % height <=0 )
-		{
-			colnum2 = ((t_pos - height)-1) % height;
-		}
-		else
-		{
-			break;
-		}
-		//std::cout << "colnum: " << colnum << " colnum 2: " << colnum2 << std::endl;
-	
-		
-		if (m_table->m_table[t_pos] == QUEEN)
-		{
-			//std::cout << "returning false t_pos: " << m_table->m_table[t_pos]  << "  tpos n: " <<t_pos<< std::endl;
-			return FALSE;
-
-		}
-		if (colnum2 > colnum) //check previous column
-		{
-			break;
-		}
-		
-		t_pos = t_pos - height - 1; //set "future" column	
-
-
-	}
-	
-	//std::cout << "returning TRUE" << std::endl;
-	return TRUE;
+	return (solve_rook(position) && solve_bishop(position));
 };
 
 
