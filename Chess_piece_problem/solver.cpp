@@ -195,41 +195,33 @@ bool solver::solve_rook(int position)
 	else
 		row = (position / height)-1;
 	
-	//std::cout << "height: " << height << std::endl;
-	std::cout << "row: " << row << std::endl;
+	std::cout << "height: " << height << std::endl;
+	std::cout << "width: " << width << std::endl;
 
-	if (height > position)
+	if (width > position)
 		col = position;
-	else if (position % height == 0)
-		col = (position / height)-1;
+	else if (position % width == 0)
+		col = (position % width);
 	else
-		col = position % height;
+		col = position % width;
+	std::cout << "col: "  << col << std::endl;
 
-	std::cout << "m_table->m_num_col: " << m_table->m_num_col << std::endl;
-
-	//std::cout << "row: " << row + 1 << " col: " << col + 1 << " pos: " << (row+1)*(col+1)+col+1 << std::endl;
-
-	for (int i = 0; i < m_table->m_num_col;++i)//left-right
+	for (int i = 0; i < m_table->m_num_col; ++i)//left-right
 	{
-		
-		//row * width + i -> this works perfect
-		if (m_table->m_table[m_table->m_num_col*row + i] != SPACE)
-		{
-			return FALSE;
-		}
-		else
-		{
-			m_table->m_table[m_table->m_num_col*row + i] = 'M';
-		}
 
+		//row * width + i -> this works perfect fyi colnum = width
+		if (m_table->m_table[m_table->m_num_col*row + i] != SPACE)
+			return FALSE;
 	}
+
+
+	
 
 	for (int i = 0; i < m_table->m_num_row; ++i)
 	{
 		//i*width + col -> math is solid too
 		if (m_table->m_table[i*width + col] != SPACE)
 			return FALSE;
-
 	}
 	
 	

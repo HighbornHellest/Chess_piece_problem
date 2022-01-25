@@ -85,10 +85,10 @@ void solve(std::tuple<int, int> start_pos, std::tuple<int, int> size, PICE piece
 		break;
 	}*/
 
-	Table *table = new Table(6, 5);
-	std::list<ledger> led = { {1,0,0} };
+	
+	std::list<ledger> led = { {12,0,0} };
 	solver *solv = new solver(size,led);
-	int a =15;
+	int a =6;
 
 
 	bool b = solv->solve_rook(a);
@@ -116,7 +116,7 @@ int main()
 {
 
 
-	solve({ 0,0 }, {6,5}, queen ); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
+	solve({ 0,0 }, {6,9}, queen ); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
 
 
 
