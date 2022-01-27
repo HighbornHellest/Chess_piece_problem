@@ -9,6 +9,7 @@ inline auto Table::place(int a)
 };
 void Table::hashMe()
 {
+	this->toString();
 	this->m_hash= std::hash<std::string>{}(this->m_string);
 };
 ///outputs the talbe in a string, unformatted
@@ -16,7 +17,6 @@ void Table::toString()
 {
 	for ( auto element : this->m_table)
 	{
-		this->m_string = "";
 		this->m_string += element;
 	}
 }
@@ -29,6 +29,7 @@ inline auto Table::dimensons()
 void Table::output(std::vector<char> m_table, int col)
 {
 	int i = 0;
+
 	
 	for (auto e : m_table)
 	{
@@ -46,3 +47,8 @@ void Table::output(std::vector<char> m_table, int col)
 	std::cout << std::endl << i << std::endl;
 }
 
+
+void Table::fileoutput( std::list<ledger> a)
+{
+
+}

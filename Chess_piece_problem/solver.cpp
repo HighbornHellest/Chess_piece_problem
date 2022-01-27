@@ -190,32 +190,38 @@ bool solver::solve_rook(int position)
 
 	*/
 	int row;
-	if (position < height)
+	if (position < width)
 		row = 0;
 	else
-		row = (position / height)-1;
+		row = (position / width);
 
+	/*std::cout << "height:" << height << std::endl;
+	std::cout << "position%width: " << position % width << std::endl;
+	std::cout << "row: " << row << std::endl;
+	std::cout << "mnumcol: " << m_table->m_num_col << std::endl;*/
 
 	if (width > position)
 		col = position;
-	else if (position % width == 0)
-		col = (position % width);
 	else
 		col = position % width;
 
 	for (int i = 0; i < m_table->m_num_col; ++i)//left-right
 	{
-
+		//std::cout << "width * row + i: " << width * row + i << std::endl;
 		//row * width + i -> this works perfect fyi colnum = width
-		if (m_table->m_table[m_table->m_num_col*row + i] != SPACE)
+		if (m_table->m_table[width*row + i] != SPACE)
 			return FALSE;
+
 	}
 
 	for (int i = 0; i < m_table->m_num_row; ++i)
 	{
+
+
 		//i*width + col -> math is solid too
 		if (m_table->m_table[i*width + col] != SPACE)
 			return FALSE;
+
 	}
 	
 	return TRUE;
@@ -252,7 +258,7 @@ bool solver::solve_bishop(int position)
 
 	
 	//up right
-	while( (t_pos > 0))
+	while( (t_pos >= 0))
 	{
 		if (colnum2 <= colnum) //check previous column
 			break;
@@ -294,12 +300,13 @@ bool solver::solve_bishop(int position)
 	}
 
 	//up left
-	while (t_pos > 0)
+	while (t_pos >= 0)
 	{
 		colnum = t_pos % width; //set current col
 
 		if (m_table->m_table[t_pos] != SPACE)
 			return FALSE;
+
 
 
 

@@ -10,10 +10,11 @@ public:
 	///wiretes something in 1d position
 	inline auto place(int a);
 	inline auto dimensons();
-	inline void hashMe();
 	inline void toString();
+	void hashMe();
 
 	void output(std::vector<char> m_table, int col);
+	void fileoutput(std::list<ledger>);
 
 	///copy constructor
 	Table(const Table &t2)
@@ -52,7 +53,7 @@ public:
 	std::vector<char> m_table;
 	int m_num_col;
 	int m_num_row;
-private:
+
 	//the table itself
 	
 	

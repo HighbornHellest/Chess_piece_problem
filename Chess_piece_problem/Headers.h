@@ -7,6 +7,8 @@
 #include <array>
 #include <cstdlib>
 #include <chrono>
+#include <fstream>
+#include <map>
 
 #define TRUE 1
 #define FALSE 0
@@ -38,6 +40,5 @@ struct ledger
 		col = b;
 		row = c;
 	}
-
 
 };

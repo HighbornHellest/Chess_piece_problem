@@ -39,12 +39,14 @@ public:
 			//std::cout << "WHAT THE ACTUAL:" << le.pos << std::endl;
 		}
 		//m_table->output(m_table->m_table, 6);
+		//std::cout << "creating a solver " << std::endl;
 	
 	}
 
 	~solver()
 	{
 		delete m_table;
+		//std::cout << "deleting a solver " << std::endl;
 	};
 
 	bool solve_rook(int);
