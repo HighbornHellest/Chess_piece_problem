@@ -44,7 +44,7 @@ void Table::output(std::vector<char> m_table, int col)
 		std::cout <<"["<< e <<"]";
 		++i;
 	}
-	std::cout << std::endl << i << std::endl;
+	std::cout << std::endl;
 }
 
 

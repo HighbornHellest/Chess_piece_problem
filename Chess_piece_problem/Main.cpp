@@ -9,7 +9,7 @@ namespace outT
 	int output = 0;
 }
 
-void solve_for_queen(std::list<ledger> led, std::tuple<int, int> size, int depth = 0)
+void solve_for_queen(std::list<ledger> led, std::tuple<int, int> size, int needed_queens, int depth = 0)
 {
 	
 	//making size multiple use
@@ -23,10 +23,10 @@ void solve_for_queen(std::list<ledger> led, std::tuple<int, int> size, int depth
 	//creating a new solver for each iteration
 	solver *sol = new solver(size, led);
 
-	if (start_pos >= size_a * size_b) //checking if we're finished
-	{
-		std::cout << "start pos: " << start_pos << std::endl;
-		if (depth == size_b)
+	/*if (start_pos >= size_a * size_b) //checking if we're finished
+	{*/
+		//std::cout << "start pos: " << start_pos << std::endl;
+		if (depth >= needed_queens)
 		{
 
 			sol->m_table->output(sol->m_table->m_table, size_a);
@@ -36,7 +36,7 @@ void solve_for_queen(std::list<ledger> led, std::tuple<int, int> size, int depth
 
 		}
 		
-	}
+	/*}*/
 
 	//checking on the depth counter, if we're "too" deep
 
@@ -51,7 +51,7 @@ void solve_for_queen(std::list<ledger> led, std::tuple<int, int> size, int depth
 				sol->m_table->m_table[i] = QUEEN;
 				tled = led;
 				tled.push_back({ i,0,0 });
-				solve_for_queen(tled, { size_a, size_b }, depth + 1);
+				solve_for_queen(tled, { size_a, size_b },needed_queens, depth + 1);
 			}
 			sol->m_table->m_table[i] = SPACE;
 
@@ -60,7 +60,7 @@ void solve_for_queen(std::list<ledger> led, std::tuple<int, int> size, int depth
 	delete sol;
 };
 
-void solve(std::tuple<int, int> start_pos, std::tuple<int, int> size, PICE piece = queen)
+void solve(std::tuple<int, int> start_pos, std::tuple<int, int> size, int needed_queens, PICE piece = queen)
 {
 	
 	int a = std::get<0>(start_pos);// || column
@@ -81,7 +81,7 @@ void solve(std::tuple<int, int> start_pos, std::tuple<int, int> size, PICE piece
 	{
 	case 0:
 	{
-		solve_for_queen(led, {size_a, size_b});
+		solve_for_queen(led, {size_a, size_b}, needed_queens);
 		break;
 	}
 	case 1:
@@ -121,20 +121,61 @@ void solve_for_rook() {};
 void solve_for_bishop() {};
 
 
-int main()
+int main(int argc, char **argv)
 {
+	int needed_queens = -1;
 	int a, b;
-	std::cin >> a;
-	std::cin >> b;
+	if (argc == 1)
+	{
 
-	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 	
-	solve({ 0,0 }, { a,b }, queen); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		std::cout << "give two ints, for table size or 0 for exit" << std::endl;
 	
-	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
-	std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count() << "[ns]" << std::endl;
+		std::cin >> a;
+		if (a == 0) return 0;
+		std::cin >> b;
+		if (b == 0) return 0;
+		std::cout << "please give AT LEAST how many queens to find, or 0 for exit" << std::endl;
+		std::cin >> needed_queens;
+		if (needed_queens == 0) return 0;
+	}
+	else
+	{
+		a = atoi(argv[1]);
+		b = atoi(argv[2]);
+		needed_queens = atoi(argv[3]);
+	}
 
+	while (needed_queens!=0 && a!=0 && b!=0)
+	{
+
+		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	
+		solve({ 0,0 }, { a,b }, needed_queens, queen); //00 would be starting pistion that's not used atm, and the second set if numbers are the size
+		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	
+		std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "[µs]" << std::endl;
+		std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count() << "[ns]" << std::endl;
+		std::cout << std::endl << std::endl;
+		std::cout << "logic have terminated, input next cycle parameters or exit command" << std::endl;
+		std::cout << "solutions have been displayed based on parameters, if empty no solutions exist" << std::endl;
+		std::cout << std::endl << std::endl;
+
+		if (argc > 1)
+		{
+			break;
+		}
+
+		std::cout << "give two ints, for table size or 0 for exit" << std::endl;
+		std::cin >> a;
+		if (a == 0) break;
+		std::cin >> b;
+		if (b == 0) break;
+		std::cout << "please give AT LEAST how many queens to find, or 0 for exit" << std::endl;
+		std::cin >> needed_queens;
+		if (needed_queens == 0) break;
+	
+	}
 
 	return 0;
 }
